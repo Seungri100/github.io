@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>같이카 설문조사</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: linear-gradient(to bottom, #ffffff 0%, #f0f4f8 100%);
+      color: #333;
+      margin: 0;
+      padding: 0;
+      font-size: 14px;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 22px;
+      margin: 30px 0 15px;
+      color: #003366;
+    }
+
+    form {
+      max-width: 600px;
+      margin: 0 auto 40px;
+      background-color: white;
+      border: 2px solid #ccc;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+      font-size: 14px;
+    }
+
+    label {
+      display: block;
+      margin-top: 16px;
+      font-weight: 500;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="time"],
+    input[type="date"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 6px;
+      font-size: 13px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+
+    .carrier-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .carrier-options label {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 13px;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    button {
+      display: block;
+      margin: 25px auto 0;
+      padding: 10px 25px;
+      font-size: 14px;
+      font-weight: bold;
+      color: white;
+      background-color: #003366;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #0055aa;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>같이카 설문조사</h2>
+  <form action="thankyou.html" method="get">
+    <label for="carrier">캐리어 유무</label>
+    <span style="font-size: 12px; color: #555;">
+      "대" 선택 시, 대형 사이즈까지 가능하다는 뜻
+      </span>
+    <div class="carrier-options">
+      <label><input type="checkbox" name="carrier" value="none"> 없음</label>
+      <label><input type="checkbox" name="carrier" value="small"> 소형</label>
+      <label><input type="checkbox" name="carrier" value="medium"> 중형</label>
+      <label><input type="checkbox" name="carrier" value="large"> 대형</label>
+      <label><input type="checkbox" name="carrier" value="multiple"> 여러 개</label>
+    </div>
+
+    <label for="exact-number">캐리어 갯수</label>
+    <input type="number" id="exact-number" name="exact-number">
+
+    <label for="exact-time">시간대</label>
+    <input type="time" id="exact-time" name="exact-time">
+
+    <label for="people">인원수</label>
+    <input type="number" id="people" name="people" min="1" max="4">
+
+    <label for="gender">성별</label>
+    <select id="gender" name="gender">
+      <option value="">선택하세요</option>
+      <option value="female">only 여자</option>
+      <option value="male">only 남자</option>
+      <option value="any">성별무관</option>
+    </select>
+
+    <label for="date">날짜</label>
+    <input type="date" id="date" name="date">
+
+    <label for="departure_in">출발지 (한동대학교 → 포항역)</label>
+    <select id="departure_in" name="departure_in">
+      <option value="">선택하세요</option>
+      <option value="taxi">택시 정류장</option>
+      <option value="geuhalma">그할마</option>
+      <option value="yuya">유야</option>
+      <option value="galdae">갈대상자</option>
+      <option value="other">그 외</option>
+    </select>
+
+    <label for="departure_out">출발지 (포항역 → 한동대학교)</label>
+    <select id="departure_out" name="departure_out">
+      <option value="">선택하세요</option>
+      <option value="taxi">택시 정류장</option>
+      <option value="geuhalma">그할마</option>
+      <option value="yuya">유야</option>
+      <option value="daiso">다이소</option>
+      <option value="beach">영일대</option>
+      <option value="beach">칠포</option>
+      <option value="galdae">갈대상자</option>
+      <option value="other">그 외</option>
+    </select>
+
+    <label for="opinion">장소</label>
+    <textarea id="opinion" name="opinion" placeholder="자유롭게 작성해 주세요"></textarea>
+
+    <label for="opinion">방장 코멘트</label>
+    <textarea id="opinion" name="opinion" placeholder="자유롭게 작성해 주세요"></textarea>
+
+    <button type="submit">제출</button>
+  </form>
+
+</body>
+</html>

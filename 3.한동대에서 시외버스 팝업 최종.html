@@ -1,0 +1,728 @@
+<html>
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>한동대 ➡ 시외버스터미널 택시팟</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background-color: #f8f9fa;
+    }
+
+    /* 🔧 필터 레이아웃 조정 */
+    .filter-form {
+      width: 100%;
+      max-width: calc(170px * 5 + 30px * 4); /* 카드 5개 + 간격 */
+      margin: 20px auto;
+      padding: 20px;
+      box-sizing: border-box;
+      background-color: white;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+    }
+
+    fieldset {
+      border: none;
+    }
+
+    .filter-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+
+    .filter-column {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+
+    .filter-label {
+      width: 90px;
+    }
+
+    .filter-options {
+      flex: 1;
+    }
+
+    .filter-options input[type="text"],
+    .filter-options input[type="date"] {
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .submit-wrap {
+      text-align: right;
+      margin-top: 10px;
+    }
+
+    button {
+      background-color: #003366;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+    }
+
+    /* 체크박스/라디오 커스텀 */
+    input[type="checkbox"].blue-check,
+    input[type="radio"].blue-radio {
+      display: none;
+    }
+
+    label.custom-checkbox,
+    label.custom-radio {
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+      margin-right: 10px;
+      position: relative;
+      padding-left: 24px;
+    }
+
+    label.custom-checkbox::before,
+    label.custom-radio::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 2px;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #ccc;
+      background-color: white;
+      box-sizing: border-box;
+    }
+
+    label.custom-radio::before {
+      border-radius: 50%;
+    }
+
+    input[type="checkbox"].blue-check:checked + label.custom-checkbox::before {
+      background-color: #007BFF;
+      border-color: #007BFF;
+      background-image: url('data:image/svg+xml;utf8,<svg fill="white" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M6 10.8L3.2 8 2 9.2l4 4 8-8L12.8 4l-6.8 6.8z"/></svg>');
+      background-size: 12px;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    input[type="radio"].blue-radio:checked + label.custom-radio::before {
+      background-color: #007BFF;
+      border-color: #007BFF;
+      background-image: radial-gradient(circle, white 40%, transparent 41%);
+      background-size: 8px 8px;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    /* 🧱 카드 그리드 */
+    .room-list-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 170px);
+      grid-template-rows: auto;
+      row-gap: 30px;
+      column-gap: 30px;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .room-card-onlyg,
+    .room-card-onlym,
+    .room-card-onlygm {
+      width: 170px;
+      height: 220px;
+      border: 1.5px solid #ddd;
+      border-radius: 16px;
+      background-color: #ffffff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .room-card-onlyg:hover,
+    .room-card-onlym:hover,
+    .room-card-onlygm:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+    }
+
+    .room-card-onlyg .room-time { background-color: #ffe6f0; }
+    .room-card-onlym .room-time { background-color: #e0f3ff; }
+    .room-card-onlygm .room-time { background-color: #f0f0f0; }
+
+    .room-time {
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+      font-size: 13px;
+      padding: 6px 0;
+      font-weight: 500;
+    }
+
+    .room-member img {
+      width: 100%;
+      height: 90px;
+      object-fit: cover;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .room-tags {
+      padding: 6px 10px;
+      flex-grow: 1;
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .room-tags ul {
+      padding-left: 16px;
+      margin: 0;
+      list-style-type: disc;
+      width: 100%;
+      overflow-wrap: break-word;
+    }
+
+    .room-tags li {
+      font-size: 11px;
+      margin-bottom: 2px;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+    }
+
+    h2 {
+      text-align: center;
+      border: 2px solid #ddd;
+      border-radius: 12px;
+      padding: 12px 24px;
+      margin: 10px auto;
+      width: fit-content;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      background-color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <form class="filter-form">
+    <fieldset>
+      <legend>🔦필터</legend>
+      <div class="filter-row">
+        <div class="filter-column">
+          <div class="filter-group">
+            <div class="filter-label">캐리어:</div>
+            <div class="filter-options">
+              <input type="checkbox" id="carrier" name="carrier">
+              <label for="carrier">캐리어</label><br>
+              <input type="checkbox" id="small" name="carrier_size" class="blue-check" checked>
+              <label for="small" class="custom-checkbox">소</label>
+              <input type="checkbox" id="medium" name="carrier_size" class="blue-check" checked>
+              <label for="medium" class="custom-checkbox">중</label>
+              <input type="checkbox" id="large" name="carrier_size" class="blue-check" checked>
+              <label for="large" class="custom-checkbox">대</label>
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <div class="filter-label">시간대:</div>
+            <div class="filter-options">
+              <input type="checkbox" id="morning" class="blue-check">
+              <label for="morning" class="custom-checkbox">오전</label>
+              <input type="checkbox" id="afternoon" class="blue-check" checked>
+              <label for="afternoon" class="custom-checkbox">오후</label>
+              <input type="checkbox" id="evening" class="blue-check">
+              <label for="evening" class="custom-checkbox">저녁</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="filter-column">
+          <div class="filter-group">
+            <div class="filter-label">성별:</div>
+            <div class="filter-options">
+              <input type="radio" id="only_female" name="gender" class="blue-radio">
+              <label for="only_female" class="custom-radio">only 여</label>
+              <input type="radio" id="only_male" name="gender" class="blue-radio" checked>
+              <label for="only_male" class="custom-radio">only 남</label>
+              <input type="radio" id="gender_any" name="gender" class="blue-radio">
+              <label for="gender_any" class="custom-radio">성별 무관</label>
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <div class="filter-label">출발지:</div>
+            <div class="filter-options">
+              <input type="radio" id="taxi" name="departure" class="blue-radio" checked>
+              <label for="taxi" class="custom-radio">택시정류장</label>
+              <input type="radio" id="shuttle" name="departure" class="blue-radio">
+              <label for="shuttle" class="custom-radio">갈대상자</label>
+              <input type="radio" id="other" name="departure" class="blue-radio">
+              <label for="other" class="custom-radio">그 외 장소</label><br>
+              <label for="other_place">※ '그 외 장소' 입력:</label><br>
+              <input type="text" id="other_place" placeholder="장소 입력">
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <div class="filter-label">* 날짜:</div>
+            <div class="filter-options">
+              <input type="date" id="date">
+            </div>
+          </div>
+
+          <div class="submit-wrap">
+            <button type="submit">완료</button>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+   <style>
+    body {
+        
+         font-family: "Segoe UI", sans-serif;
+        background-color: #f8f9fa;
+    }
+
+    .room-list-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 170px);
+        grid-template-rows: repeat(2, 220px); /* 높이 증가 */
+        row-gap: 30px;
+        column-gap: 30px;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .room-card-onlyg,
+    .room-card-onlym,
+    .room-card-onlygm {
+        width: 170px;
+        height: 220px; /* 높이 증가 */
+        border: 1.5px solid #ddd;
+        border-radius: 16px;
+        background-color: #ffffff;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .room-card-onlyg:hover,
+    .room-card-onlym:hover,
+    .room-card-onlygm:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+    }
+
+    .room-card-onlyg .room-time {
+        background-color: #ffe6f0;
+    }
+
+    .room-card-onlym .room-time {
+        background-color: #e0f3ff;
+    }
+
+    .room-card-onlygm .room-time {
+        background-color: #f0f0f0;
+    }
+
+    .room-time {
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+        font-size: 13px;
+        padding: 6px 0;
+        font-weight: 500;
+    }
+
+    .room-member img {
+        width: 100%;
+        height: 90px; /* 높이 증가 */
+        object-fit: cover;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .room-tags {
+        padding: 6px 10px;
+        flex-grow: 1;
+        display: flex;
+        align-items: flex-start; /* 상단 정렬 */
+    }
+
+    .room-tags ul {
+    padding-left: 16px; /* 좌측 패딩 소폭 감소 */
+    margin: 0;
+    list-style-type: disc;
+    width: 100%;
+    overflow-wrap: break-word; /* 단어 길 경우 줄바꿈 */
+}
+
+.room-tags li {
+    font-size: 11px;
+    margin-bottom: 2px;
+    white-space: normal; /* 줄바꿈 허용 */
+    overflow: visible; /* 숨기지 않음 */
+    text-overflow: clip; /* 잘라내지 않음 */
+}
+
+    h2 {
+        font-weight: 600;
+    }
+</style>
+
+
+</head>
+
+<body>
+
+<h2 style="
+    text-align: center;
+    border: 2px solid #ddd;
+    border-radius: 12px;
+    padding: 12px 24px;
+    margin: 10px auto;
+    width: fit-content;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    background-color: white;
+">
+    한동대➡️시외버스터미널 🚕택시팟 찾기
+</h2>
+
+<div>
+    <h5 style="text-align: center; padding: 2px; margin: 10px 1060px 10px 223px;">
+        📅7/20
+    </h5>
+</div>
+
+
+    <section class="room-list-grid">
+
+    
+
+
+        <div class="room-card-onlym" onclick="openPopup('', false)">
+            <div class="room-time">오전 6:30</div>
+            <div class="room-member"><img src="9.png" width="140" height="100"></div>
+            <div class="room-tags">
+            
+            <ul>
+                <li>👨</li>
+                <li>모임장소: 택시정류장</li>
+                <li>방장: "드디어 집 간다"</li>
+            </ul>
+            
+            </div>
+
+            </div>
+       
+ 
+
+        <div class="room-card-onlyg" onclick="openPopup('', false)">
+            <div class="room-time">오전 8:00</div>
+            <div class="room-member"><img src="13.png" width="140" height="100"></div>
+            <div class="room-tags">
+            
+            <ul>
+                <li>👩</li>
+                <li>모임장소: 택시정류장</li>
+                <li>방장: "검정색 야잠 입고 있는 사람입니다"</li>
+            </ul>
+            </div>
+
+       </div>
+
+
+
+       <div class="room-card-onlygm" onclick="openPopup('', false)">
+            <div class="room-time">오전 10:50</div>
+            <div class="room-member"><img src="1.png" width="140" height="100"></div>
+            <div class="room-tags">
+                <ul>
+                <li>👨👩</li>
+                <li>🧳소 🧳중</li>
+                <li>모임장소: 채플 앞</li>
+                <li>방장: "같이 집 갈 사람~"</li>
+            </ul>
+            </div>
+
+       </div>
+
+
+
+       <div class="room-card-onlygm" onclick="openPopup('', false)">
+            <div class="room-time">오후 12:15</div>
+            <div class="room-member"><img src="11.png" width="140" height="100"></div>
+            <div class="room-tags">
+            <ul>
+                <li>👨👩</li>
+                <li>모임장소: 택시 정류장</li>
+                <li>방장: "룰루 랄라"</li>
+            </ul>
+            
+            </div>
+
+
+        </div>    
+
+
+        <div class="room-card-onlygm" onclick="openPopup('', false)">
+            <div class="room-time">오후 14:20</div>
+            <div class="room-member"><img src="17.png" width="140" height="100"></div>
+            <div class="room-tags">
+            <ul>
+                <li>👨👩</li>
+                <li>🧳소x2</li>
+                <li>모임장소: 갈대상자</li>
+                <li>방장: "늦지 말아주세요!"</li>
+            </ul>
+            </div>
+        </div>    
+
+
+
+          <div class="room-card-onlym" onclick="openPopup('', false)">
+            <div class="room-time">오후 15:45</div>
+            <div class="room-member"><img src="18.png" width="140" height="100"></div>
+            <div class="room-tags">
+            <ul>
+                <li>👨</li>
+                <li>모임장소: 택시정류장</li>
+                <li>방장: "편하게 들어오세용"</li>
+            </ul>
+            </div>
+
+
+        </div>    
+
+
+
+         <div class="room-card-onlygm" onclick="openPopup('소,대', true)">
+            <div class="room-time">오후 16:00</div>
+            <div class="room-member"><img src="7.png" width="140" height="100"></div>
+            <div class="room-tags">
+            <ul>
+                <li>👨👩</li>
+                <li>🧳소 🧳대</li>
+                <li>모임장소: 택시정류장</li>
+                <li>방장: "집..빨리..."</li>
+            </ul>
+            </div>
+
+
+        </div>    
+
+
+        <div class="room-card-onlygm" onclick="openPopup('', false)">
+            <div class="room-time">저녁 19:35</div>
+            <div class="room-member"><img src="5.png" width="140" height="100"></div>
+            <div class="room-tags">
+            <ul>
+                <li>👨👩</li>
+                <li>🧳소 🧳중</li>
+                <li>모임장소: 택시정류장</li>
+                <li>방장: "모집 합니더!"</li>
+            </ul>
+            </div>
+
+                </div>
+
+
+
+        <div class="room-card-onlygm" onclick="openPopup('', false)">
+            <div class="room-time">저녁 20:40</div>
+            <div class="room-member"><img src="19.png" width="140" height="100"></div>
+            <div class="room-tags">
+            <ul>
+                <li>👨👩</li>
+                <li>모임장소: 택시정류장</li>
+                <li>방장: "같이 타고 가용"</li>
+            </ul>
+            </div>
+
+        
+
+        </div>    
+
+
+
+         <div class="room-card-onlygm" onclick="openPopup('', false)">
+            <div class="room-time">저녁 23:10</div>
+            <div class="room-member"><img src="19.png" width="140" height="100"></div>
+            <div class="room-tags">
+            <ul>
+                <li>👨👩</li>
+                <li>모임장소: 택시정류장</li>
+                <li>방장: "수고 했어 오늘도"</li>
+            </ul>
+            </div>
+
+                </div>
+
+
+
+
+
+
+        </section>
+       <div class="popup-overlay" id="popupOverlay">
+  <div class="popup-box" id="popupBox"></div>
+</div>
+
+<style>
+.popup-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.popup-box {
+  background: white;
+  padding: 24px;
+  border-radius: 14px;
+  width: 280px;
+  text-align: center;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+}
+
+.popup-box h3 {
+  margin-bottom: 16px;
+}
+
+.popup-box label {
+  display: block;
+  margin: 8px 0;
+}
+
+.popup-buttons {
+  margin-top: 16px;
+}
+
+.popup-buttons button {
+  padding: 8px 16px;
+  margin: 0 8px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+</style>
+
+<script>
+let currentStep = 1;
+let popupData = {};
+
+function openPopup(sizesStr = '', hasLuggage = true) {
+  currentStep = 1;
+  popupData = {
+    sizes: sizesStr.split(',').map(s => s.trim()).filter(Boolean),
+    hasLuggage
+    
+  };
+  document.getElementById('popupOverlay').style.display = 'flex';
+
+  // 상황 판단해서 단계 조절
+  if (!hasLuggage) {
+    goToChat(); // 캐리어 없으면 바로 채팅방 이동
+  } else if (popupData.sizes.length === 1) {
+    showStep(1); // 유무 확인만 하고 바로 채팅방
+  } else {
+    showStep(1); // 유무 → 사이즈 → 채팅방
+  }
+}
+
+function showStep(step) {
+  const popupBox = document.getElementById('popupBox');
+
+  if (step === 1) {
+    popupBox.innerHTML = `
+      <h3>캐리어가 있나요?</h3>
+      <label><input type="radio" name="hasLuggageInput" value="yes"> O</label>
+      <label><input type="radio" name="hasLuggageInput" value="no"> X</label>
+      <div class="popup-buttons">
+        <button onclick="handleStep1()">다음</button>
+      </div>
+    `;
+  }
+
+  if (step === 2) {
+    popupBox.innerHTML = `
+  <h3>캐리어 사이즈 선택</h3>
+  ${popupData.sizes.map(size => `
+    <label><input type="radio" name="sizeOption" value="${size}"> ${size}</label>
+  `).join('')}
+  <div class="popup-buttons">
+    <button onclick="handleStep2()">채팅방 입장</button>
+  </div>
+`;
+  }
+}
+
+function handleStep1() {
+  const value = document.querySelector('input[name="hasLuggageInput"]:checked');
+
+  if (!value) {
+    alert("캐리어 유무를 선택해주세요!");
+    return; // 선택 안 했으면 함수 중단
+  }
+
+  const selected = value.value;
+
+  if (selected === "no") {
+    goToChat();
+  } else {
+    if (popupData.sizes.length === 1) {
+      goToChat();
+    } else {
+      showStep(2);
+    }
+  }
+}
+
+function handleStep2() {
+  const selectedSize = document.querySelector('input[name="sizeOption"]:checked');
+
+  if (!selectedSize) {
+    alert("캐리어 사이즈를 선택해주세요!");
+    return;
+  }
+
+  // 필요 시 selectedSize.value 사용 가능
+  goToChat();
+}
+
+
+function goToChat() {
+  // 채팅방으로 이동 (수정 필요!)
+  window.location.href = "chat.html";
+}
+
+function closePopup() {
+  document.getElementById('popupOverlay').style.display = 'none';
+}
+</script>
+
+</body>
+        
+    </body>
+
+</html>

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>같이카 - My 페이지</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background-color: #f2f2f2;
+      font-family: 'Noto Sans KR', sans-serif;
+      color: #333;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 30px 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #003366;
+      font-size: 26px;
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      border-radius: 12px;
+      position: relative;
+      margin-bottom: 30px;
+      gap: 20px;
+      background-color: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      transition: border 0.2s;
+    }
+
+    .profile.editing {
+      border: 2px solid #007bff;
+    }
+
+    .photo-wrapper {
+      position: relative;
+      width: 100px;
+      height: 100px;
+    }
+
+    .photo-wrapper img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #ccc;
+    }
+
+    .photo-button {
+      position: absolute;
+      bottom: -6px;
+      right: -6px;
+      background-color: #007bff;
+      color: white;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      cursor: pointer;
+      border: 2px solid #fff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .profile-info {
+      flex: 1;
+    }
+
+    .profile-info p {
+      margin: 10px 0;
+      font-size: 16px;
+    }
+
+    .profile-info input {
+      padding: 12px;
+      width: 220px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    .edit-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      padding: 10px 16px;
+      border: none;
+      background-color: #007bff;
+      color: #fff;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 16px;
+      transition: background-color 0.2s;
+    }
+
+    .edit-btn:hover {
+      background-color: #0056b3;
+    }
+
+    .rooms {
+      border-top: 2px solid #003366;
+      padding-top: 20px;
+    }
+
+    .rooms h2 {
+      margin-bottom: 20px;
+      font-size: 22px;
+      color: #003366;
+    }
+
+    .room-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .room-card {
+      display: flex;
+      align-items: center;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 14px;
+      text-decoration: none;
+      color: inherit;
+      transition: background-color 0.2s, box-shadow 0.2s;
+      background-color: #fff;
+    }
+
+    .room-card:hover {
+      background-color: #f0f0f0;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .room-icon {
+      font-size: 36px;
+      margin-right: 16px;
+    }
+
+    .room-info h3 {
+      margin: 0;
+      font-size: 18px;
+      color: #333;
+    }
+
+    .tags {
+      margin-top: 6px;
+      font-size: 0.95em;
+      color: #555;
+    }
+
+    .tag {
+      margin-right: 8px;
+      background-color: #eee;
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+
+    /* Modal styles */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      display: none;
+    }
+
+    .modal-content {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      width: 300px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+
+    .modal-content h3 {
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+
+    .modal-content button {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 10px;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .modal-content button:last-child {
+      background-color: #ccc;
+      color: #333;
+    }
+
+    .modal-content button:hover {
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>My 페이지</h1>
+
+    <div class="profile" id="profile">
+      <div class="photo-wrapper">
+        <img id="profile-photo" src="icon.png" alt="프로필 사진">
+        <div class="photo-button" id="photo-button">+</div>
+      </div>
+      <div class="profile-info" id="profile-info"></div>
+      <button class="edit-btn" id="edit-btn">편집하기</button>
+    </div>
+
+    <div class="rooms">
+      <h2>&lt;내 방&gt;</h2>
+      <div class="room-list">
+        <a class="room-card" href="chat.html">
+          <div class="room-icon">🧑‍🤝‍🧑</div>
+          <div class="room-info">
+            <h3>성북구 택시팟</h3>
+            <div class="tags">
+              <span class="tag">#성북구</span>
+              <span class="tag">#카풀</span>
+            </div>
+          </div>
+        </a>
+        <a class="room-card" href="chat.html">
+          <div class="room-icon">🚕</div>
+          <div class="room-info">
+            <h3>포항역 이동</h3>
+            <div class="tags">
+              <span class="tag">#역</span>
+              <span class="tag">#카풀</span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal" id="photo-modal">
+    <div class="modal-content">
+      <h3>프로필 사진 변경</h3>
+      <button id="choose-photo">사진 선택</button>
+      <button id="delete-photo">사진 삭제</button>
+      <button id="close-modal">닫기</button>
+    </div>
+  </div>
+
+  <input type="file" id="file-input" accept="image/*" style="display:none;">
+
+  <script>
+    let profileData = {
+      name: '홍길동',
+      studentId: '20251234',
+      department: '기계공학과',
+      gender: '남',
+      account: ''
+    };
+
+    let isEditing = false;
+    const profileInfoDiv = document.getElementById('profile-info');
+    const editBtn = document.getElementById('edit-btn');
+    const profileDiv = document.getElementById('profile');
+
+    function renderProfile() {
+      if (isEditing) {
+        profileDiv.classList.add('editing');
+        profileInfoDiv.innerHTML = `
+          <p><strong>이름:</strong> <input type="text" id="name-input" value="${profileData.name}"></p>
+          <p><strong>학번:</strong> <input type="text" id="studentId-input" value="${profileData.studentId}"></p>
+          <p><strong>학과:</strong> <input type="text" id="department-input" value="${profileData.department}"></p>
+          <p><strong>성별:</strong> <input type="text" id="gender-input" value="${profileData.gender}"></p>
+          <p><strong>계좌번호:</strong> <input type="text" id="account-input" value="${profileData.account}"></p>
+        `;
+        editBtn.textContent = '저장';
+      } else {
+        profileDiv.classList.remove('editing');
+        profileInfoDiv.innerHTML = `
+          <p><strong>이름:</strong> ${profileData.name}</p>
+          <p><strong>학번:</strong> ${profileData.studentId}</p>
+          <p><strong>학과:</strong> ${profileData.department}</p>
+          <p><strong>성별:</strong> ${profileData.gender}</p>
+          <p><strong>계좌번호:</strong> ${profileData.account ? profileData.account : '입력 안 됨'}</p>
+        `;
+        editBtn.textContent = '편집하기';
+      }
+    }
+
+    editBtn.addEventListener('click', () => {
+      if (isEditing) {
+        profileData.name = document.getElementById('name-input').value;
+        profileData.studentId = document.getElementById('studentId-input').value;
+        profileData.department = document.getElementById('department-input').value;
+        profileData.gender = document.getElementById('gender-input').value;
+        profileData.account = document.getElementById('account-input').value;
+      }
+      isEditing = !isEditing;
+      renderProfile();
+    });
+
+    renderProfile();
+
+    // 사진 변경
+    const photoButton = document.getElementById('photo-button');
+    const photoModal = document.getElementById('photo-modal');
+    const closeModal = document.getElementById('close-modal');
+    const choosePhoto = document.getElementById('choose-photo');
+    const deletePhoto = document.getElementById('delete-photo');
+    const fileInput = document.getElementById('file-input');
+    const profilePhoto = document.getElementById('profile-photo');
+
+    photoButton.addEventListener('click', () => {
+      photoModal.style.display = 'flex';
+    });
+
+    closeModal.addEventListener('click', () => {
+      photoModal.style.display = 'none';
+    });
+
+    choosePhoto.addEventListener('click', () => {
+      fileInput.click();
+    });
+
+    fileInput.addEventListener('change', (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          profilePhoto.src = e.target.result;
+          photoModal.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    deletePhoto.addEventListener('click', () => {
+      profilePhoto.src = 'icon.png';
+      photoModal.style.display = 'none';
+    });
+  </script>
+</body>
+</html>

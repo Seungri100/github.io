@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>같이카 - 채팅방</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: #f2f2f2;
+      color: #333;
+    }
+
+    .chat-container {
+      max-width: 600px;
+      margin: 30px auto;
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 60px);
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    .chat-header {
+      background-color: #007bff;
+      color: white;
+      padding: 16px 12px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 600;
+      border-bottom: 2px solid #0056b3;
+      line-height: 1.4;
+    }
+
+    .chat-messages {
+      flex-grow: 1;
+      padding: 20px 16px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      background-color: #f7f9fb;
+    }
+
+    .message {
+      max-width: 70%;
+      padding: 14px 18px;
+      border-radius: 20px;
+      word-wrap: break-word;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      font-size: 15px;
+      line-height: 1.4;
+      position: relative;
+    }
+
+    .message.left {
+      background-color: #e9ecef;
+      align-self: flex-start;
+      border-top-left-radius: 0;
+    }
+
+    .message.right {
+      background-color: #007bff;
+      color: white;
+      align-self: flex-end;
+      border-top-right-radius: 0;
+    }
+
+    .heart {
+      position: absolute;
+      bottom: 6px;
+      right: -30px;
+      cursor: pointer;
+      font-size: 18px;
+      user-select: none;
+      color: #ccc;
+      transition: color 0.2s;
+    }
+
+    .heart.liked {
+      color: #e25555;
+    }
+
+    .chat-footer {
+      display: flex;
+      flex-direction: column;
+      border-top: 1px solid #ccc;
+      background-color: #fafafa;
+    }
+
+    .quick-replies {
+      display: flex;
+      gap: 10px;
+      padding: 8px 12px;
+      justify-content: flex-start;
+      background-color: transparent;
+    }
+
+    .quick-replies button {
+      padding: 8px 12px;
+      border: none;
+      background-color: #e9ecef;
+      color: #333;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    .quick-replies button:hover {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .footer-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .account-button {
+      flex: 0 0 auto;
+      padding: 10px 14px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.2s;
+    }
+
+    .account-button:hover {
+      background-color: #218838;
+    }
+
+    .input-area {
+      flex: 1 1 auto;
+      display: flex;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      overflow: hidden;
+      background-color: #fff;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+      min-width: 0;
+    }
+
+    .input-area input {
+      flex: 1 1 auto;
+      border: none;
+      padding: 10px 12px;
+      outline: none;
+      font-size: 15px;
+      min-width: 0;
+    }
+
+    .input-area button {
+      flex: 0 0 auto;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .input-area button:hover {
+      background-color: #0056b3;
+    }
+
+    /* 모달 스타일 */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+
+    .modal {
+      background-color: #fff;
+      padding: 20px 24px;
+      border-radius: 12px;
+      text-align: center;
+      max-width: 300px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .modal h3 {
+      margin-top: 0;
+      margin-bottom: 16px;
+      color: #003366;
+      font-size: 18px;
+    }
+
+    .modal p {
+      font-size: 15px;
+      margin-bottom: 16px;
+      word-break: break-all;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .modal-buttons button {
+      padding: 10px 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.2s;
+    }
+
+    .copy-btn {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .copy-btn:hover {
+      background-color: #0056b3;
+    }
+
+    .close-btn {
+      background-color: #ccc;
+      color: #333;
+    }
+
+    .close-btn:hover {
+      background-color: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat-header">
+      2025.10.15 / 15:30 출발<br>
+      택정 출발 / 학교 → 포항역
+    </div>
+
+    <div class="chat-messages" id="chat-messages">
+      <div class="message left">안녕하세요! 오늘 3명 카풀 모집해요.<span class="heart" onclick="toggleLike(this)">♡</span></div>
+      <div class="message left">15:30에 택정 출발 예정입니다~<span class="heart" onclick="toggleLike(this)">♡</span></div>
+      <div class="message right">저 참여할게요!</div>
+      <div class="message left">좋아요! 계좌 알려드릴게요.<span class="heart" onclick="toggleLike(this)">♡</span></div>
+    </div>
+
+    <div class="chat-footer">
+      <div class="quick-replies">
+        <button onclick="quickReply('지금 가는중')">지금 가는중</button>
+        <button onclick="quickReply('감사합니다')">감사합니다</button>
+      </div>
+      <div class="footer-controls">
+        <button class="account-button" onclick="showAccount()">계좌</button>
+        <div class="input-area">
+          <input type="text" id="message-input" placeholder="메세지를 입력하세요">
+          <button onclick="sendMessage()">전송</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 계좌 모달 -->
+  <div class="modal-overlay" id="accountModal">
+    <div class="modal">
+      <h3>계좌정보</h3>
+      <p id="accountText">농협 123-4567-8901 (홍길동)</p>
+      <div class="modal-buttons">
+        <button class="copy-btn" onclick="copyAccount()">복사</button>
+        <button class="close-btn" onclick="closeModal()">닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const messagesContainer = document.getElementById('chat-messages');
+    const messageInput = document.getElementById('message-input');
+
+    function sendMessage() {
+      const text = messageInput.value.trim();
+      if (text !== "") {
+        const msgDiv = document.createElement('div');
+        msgDiv.classList.add('message', 'right');
+        msgDiv.textContent = text;
+        messagesContainer.appendChild(msgDiv);
+        messageInput.value = "";
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
+    }
+
+    messageInput.addEventListener("keypress", function(e) {
+      if (e.key === "Enter") {
+        sendMessage();
+      }
+    });
+
+    function quickReply(text) {
+      messageInput.value = text;
+      sendMessage();
+    }
+
+    function showAccount() {
+      document.getElementById('accountModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('accountModal').style.display = 'none';
+    }
+
+    function copyAccount() {
+      const account = document.getElementById('accountText').textContent;
+      navigator.clipboard.writeText(account).then(() => {
+        alert('계좌번호가 복사되었습니다!');
+      });
+    }
+
+    function toggleLike(el) {
+      el.classList.toggle('liked');
+      el.textContent = el.classList.contains('liked') ? '❤️' : '♡';
+    }
+  </script>
+</body>
+</html>

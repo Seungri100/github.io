@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>HANDONGMOBILITY 이용방법</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #eef5fb; /* 연한 파랑색 배경 */
+      padding: 40px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 50px 40px;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    h1 {
+      text-align: center;
+      color: #003366;
+      margin-bottom: 10px;
+    }
+
+    p.subtitle {
+      text-align: center;
+      color: #555;
+      margin-bottom: 50px;
+    }
+
+    .timeline {
+      position: relative;
+      margin-left: 100px;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 20px;
+      top: 0;
+      width: 4px;
+      height: 100%;
+      background-color: #0059b3;
+    }
+
+    .step {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 50px;
+      position: relative;
+    }
+
+    .circle {
+      position: absolute;
+      left: 10px;
+      width: 20px;
+      height: 20px;
+      background-color: white;
+      border: 4px solid #0059b3;
+      border-radius: 50%;
+      z-index: 1;
+    }
+
+    .content {
+      margin-left: 40px;
+      display: flex;
+      align-items: center;
+      gap: 30px;
+    }
+
+    .content img {
+      width: 140px;
+      height: auto;
+      border-radius: 12px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .content img:hover {
+      transform: scale(1.07);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    .text h2 {
+      margin: 0;
+      font-size: 20px;
+      color: #00264d;
+    }
+
+    .text p {
+      margin: 8px 0 0;
+      color: #333;
+      line-height: 1.5;
+    }
+
+    .text strong {
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>HANDONGMOBILITY 이용방법</h1>
+    <p class="subtitle">HandongMobility를 통해 손쉽게 택시를 함께 이용하는 방법을 단계별로 안내드립니다.</p>
+
+    <div class="timeline">
+      
+      <div class="step">
+        <div class="circle"></div>
+        <div class="content">
+          <img src="image1.png" alt="시작하기">
+          <div class="text">
+            <h2>1. 시작하기</h2>
+            <p>HandongMobility 웹페이지에 접속하여<br>
+            출발지와 도착지를 선택하고 원하는 날짜와 시간을 입력한 뒤,<br>
+            <strong>방 만들기</strong> 또는 <strong>방 찾기</strong> 버튼을 클릭하세요.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="circle"></div>
+        <div class="content">
+          <img src="image2.png" alt="탑승 그룹 만들기 또는 참여하기">
+          <div class="text">
+            <h2>2. 탑승 그룹 만들기 또는 참여하기</h2>
+            <p><strong>방 만들기</strong>를 통해 새로운 탑승 그룹을 직접 생성하거나,<br>
+            이미 만들어진 방에서 함께 탈 수 있는 일정을 선택해 참여할 수 있습니다.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="circle"></div>
+        <div class="content">
+          <img src="image3.png" alt="약속 장소에서 만나기">
+          <div class="text">
+            <h2>3. 약속 장소에서 만나기</h2>
+            <p>정해진 시간과 장소(예: 한동대 정문, 포항역 택시 승강장 등)에 모여<br>
+            <strong>서로의 이름과 목적지를 확인</strong>한 뒤 탑승해주세요.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="circle"></div>
+        <div class="content">
+          <img src="image4.png" alt="함께 목적지로 이동하기">
+          <div class="text">
+            <h2>4. 함께 목적지로 이동하기</h2>
+            <p>함께 택시에 탑승하여 목적지까지 이동합니다.<br>
+            <strong>운임은 방을 만든 분의 계좌로 N분의 1로 송금</strong>할 수 있어요.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="circle"></div>
+        <div class="content">
+          <img src="image5.png" alt="마무리 인사와 피드백 남기기">
+          <div class="text">
+            <h2>5. 마무리 인사와 피드백 남기기</h2>
+            <p>도착 후 <strong>간단한 인사와 후기</strong>, <strong>별점 기능</strong>(추후 도입 예정)을 통해 경험을 공유해주세요.<br>
+            다음 이용자에게 큰 도움이 됩니다.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

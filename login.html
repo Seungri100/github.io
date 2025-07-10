@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>로그인 - 같이카</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      background-color: white;
+      width: 360px;
+      padding: 40px 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 24px;
+      font-size: 24px;
+    }
+
+    .logo-img {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+      margin-bottom: 24px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    input {
+      padding: 14px 12px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    button {
+      padding: 14px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .link {
+      margin-top: 20px;
+      font-size: 0.95em;
+    }
+
+    .link a {
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    .link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+  <script>
+    function redirectToMain(event) {
+      event.preventDefault();
+      window.location.href = "intro.html";
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h2>로그인</h2>
+    <img src="taxi.png" alt="로고" class="logo-img">
+    <form onsubmit="redirectToMain(event)">
+      <input type="text" name="userid" placeholder="hisnet 아이디로 로그인" required>
+      <input type="password" name="password" placeholder="비밀번호" required>
+      <button type="submit">로그인</button>
+    </form>
+    <div class="link">
+      아직 회원이 아니신가요? <a href="signup.html">회원가입</a>
+    </div>
+  </div>
+</body>
+</html>
