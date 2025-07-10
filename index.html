@@ -2,19 +2,19 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>HADONGMOBILITY - Main</title>
+  <title>HADONGMOBILITY - Start</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
     }
     body {
-      font-family: 'Noto Sans KR', sans-serif;
       margin: 0;
       padding: 0;
+      font-family: 'Noto Sans KR', sans-serif;
       background-color: white;
-      font-size: 18px;
       color: #333;
+      font-size: 18px;
     }
 
     header {
@@ -24,6 +24,8 @@
       align-items: center;
       background-color: white;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      position: relative;
+      z-index: 100;
     }
 
     .navbar-title {
@@ -53,90 +55,40 @@
       color: #0077cc;
     }
 
-    .logo-area {
-      text-align: center;
-      margin-top: 60px;
-    }
-
-    .logo-image {
-      width: 220px;
-      height: auto;
-    }
-
-    .site-name {
-      margin-top: 20px;
-      font-size: 36px;
-      font-weight: bold;
-      color: #003366;
-    }
-
-    .card-container {
+    main {
+      width: 100%;
+      background-color: white;
       display: flex;
       justify-content: center;
-      gap: 40px;
-      margin: 60px 30px;
-      flex-wrap: wrap;
+      align-items: flex-start;
+      padding-top: 10px;
     }
 
-    .card {
-      background-color: white;
-      border: 1px solid #ccc;
-      padding: 30px;
-      width: 300px;
-      text-align: center;
+    .video-card {
+      position: relative;
+      width: 100%;
+      max-width: 550px;
+      height: 900px;
+      overflow: hidden;
       border-radius: 12px;
-      box-shadow: 6px 6px 15px rgba(0,0,0,0.2), -6px -6px 15px rgba(255,255,255,0.5);
-      transition: all 0.3s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 8px 8px 20px rgba(0,0,0,0.25), -8px -8px 20px rgba(255,255,255,0.6);
-    }
-
-    .card h2 {
-      font-size: 24px;
-      margin-bottom: 25px;
-      color: #004080;
-    }
-
-    .card ul {
-      list-style: none;
-      padding: 0;
-      margin-bottom: 8px;
-    }
-
-    .card li {
-      margin-bottom: 12px;
-      line-height: 1.7;
-    }
-
-    .card a {
-      color: #0077cc;
-      text-decoration: none;
-      font-weight: bold;
-      margin: 0 8px;
-      font-size: 18px;
-    }
-
-    .card a:hover {
-      color: #0055aa;
-      text-decoration: underline;
-    }
-
-    .contact-button {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      width: 80px;
-      height: 80px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      background-color: black;
       cursor: pointer;
-      z-index: 1000;
     }
 
-    .contact-button img {
+    .video-card video {
       width: 100%;
       height: 100%;
+      object-fit: fill;
+      display: block;
+      background-color: black;
+    }
+
+    @media (max-width: 768px) {
+      .video-card {
+        max-width: 90%;
+        height: auto;
+      }
     }
   </style>
 </head>
@@ -156,48 +108,15 @@
     </nav>
   </header>
 
+  <!-- 메인 콘텐츠 -->
   <main>
-    <div class="logo-area">
-      <img src="taxi.png" alt="같이카 로고" class="logo-image">
-      <div class="site-name">HADONG MOBILITY</div>
-    </div>
-
-    <div class="card-container">
-      <!-- 카드들 -->
-      <div class="card">
-        <h2>포항역</h2>
-        <ul>
-          <li>학교 → 포항역<br><a href="#">방 만들기</a> | <a href="#">방 찾기</a></li>
-        </ul>
-        <ul>
-          <li>포항역 → 학교<br><a href="#">방 만들기</a> | <a href="#">방 찾기</a></li>
-        </ul>
-      </div>
-      <div class="card">
-        <h2>시외버스터미널</h2>
-        <ul>
-          <li>학교 → 시외버스<br><a href="#">방 만들기</a> | <a href="#">방 찾기</a></li>
-        </ul>
-        <ul>
-          <li>시외버스 → 학교<br><a href="#">방 만들기</a> | <a href="#">방 찾기</a></li>
-        </ul>
-      </div>
-      <div class="card">
-        <h2>포항 외부</h2>
-        <ul>
-          <li>학교 → 외부<br><a href="#">방 만들기</a> | <a href="#">방 찾기</a></li>
-        </ul>
-        <ul>
-          <li>외부 → 학교<br><a href="#">방 만들기</a> | <a href="#">방 찾기</a></li>
-        </ul>
-      </div>
-    </div>
+    <a href="intro.html" class="video-card">
+      <video autoplay loop muted playsinline>
+        <source src="video.mp4" type="video/mp4">
+        브라우저가 영상을 지원하지 않습니다.
+      </video>
+    </a>
   </main>
-
-  <!-- 문의하기 버튼 -->
-  <a href="contact.html" class="contact-button">
-    <img src="contactlogo.png" alt="문의하기">
-  </a>
 
 </body>
 </html>
